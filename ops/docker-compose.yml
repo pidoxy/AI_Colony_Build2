@@ -1,0 +1,50 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: crs-postgres
+    environment:
+      POSTGRES_USER: crs
+      POSTGRES_PASSWORD: crs
+      POSTGRES_DB: crs
+      TZ: Africa/Lagos
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - crs-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U crs -d crs"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  migrate:
+    image: node:22-alpine
+    container_name: crs-migrate
+    working_dir: /repo
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ../:/repo:cached
+    environment:
+      DATABASE_URL: postgres://crs:crs@db:5432/crs
+      PNPM_HOME: /root/.local/share/pnpm
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "[migrate] corepack + install (first run is slow)"
+        corepack enable && corepack prepare pnpm@9.15.0 --activate
+        pnpm install --frozen-lockfile || pnpm install
+        echo "[migrate] applying migrations"
+        pnpm --filter @crs/db migrate
+        echo "[migrate] codegen schema types"
+        pnpm --filter @crs/db codegen
+        echo "[migrate] seeding catalogue"
+        pnpm --filter @crs/db seed
+        echo "[migrate] done"
+    restart: "no"
+
+volumes:
+  crs-pgdata:

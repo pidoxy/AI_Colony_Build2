@@ -1,0 +1,20 @@
+{
+  "name": "@crs/policy",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@crs/db": "workspace:*",
+    "kysely": "^0.28.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24",
+    "typescript": "^5.7.2"
+  }
+}

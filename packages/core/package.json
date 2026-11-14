@@ -1,0 +1,24 @@
+{
+  "name": "@crs/core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@crs/policy": "workspace:*",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24",
+    "@types/pg": "^8",
+    "typescript": "^5.7.2",
+    "vitest": "^3"
+  }
+}

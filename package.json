@@ -1,0 +1,28 @@
+{
+  "name": "classroom-reservation",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "db:up": "docker compose -f ops/docker-compose.yml up -d --wait",
+    "db:down": "docker compose -f ops/docker-compose.yml down",
+    "db:reset": "docker compose -f ops/docker-compose.yml down -v && pnpm db:up",
+    "db:migrate": "pnpm --filter @crs/db migrate",
+    "db:codegen": "pnpm --filter @crs/db codegen",
+    "db:psql": "docker exec -it crs-postgres psql -U crs -d crs",
+    "import:rooms": "pnpm --filter @crs/db seed"
+  },
+  "devDependencies": {
+    "dotenv": "18.0.10",
+    "prettier": "^3.4.2",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  }
+}
